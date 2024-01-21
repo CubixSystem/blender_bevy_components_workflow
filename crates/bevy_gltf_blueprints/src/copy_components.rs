@@ -83,15 +83,19 @@ impl CopyComponents {
                 .unwrap()
                 .clone_value();
 
-            let mut destination = world
-                .get_entity_mut(self.destination)
-                .expect("destination entity should exist");
+            world.resource_scope(|world, registry: Mut<'_, AppTypeRegistry>| {
+                let registry = registry.read();
 
-            // println!("contains typeid {:?} {}", type_id, destination.contains_type_id(type_id));
-            // we only want to copy components that are NOT already in the destination (ie no overwriting existing components)
-            if !destination.contains_type_id(type_id) {
-                component.insert(&mut destination, &*source);
-            }
+                let mut destination = world
+                    .get_entity_mut(self.destination)
+                    .expect("destination entity should exist");
+
+                // println!("contains typeid {:?} {}", type_id, destination.contains_type_id(type_id));
+                // we only want to copy components that are NOT already in the destination (ie no overwriting existing components)
+                if !destination.contains_type_id(type_id) {
+                    component.insert(&mut destination, &*source, &registry);
+                }
+            });
         }
     }
 }

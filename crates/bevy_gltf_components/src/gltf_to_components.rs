@@ -239,7 +239,7 @@ pub fn gltf_extras_to_components(
                     .unwrap() // Component was successfully deserialized, it has to be in the registry
                     .data::<ReflectComponent>()
                     .unwrap() // Hopefully, the component deserializer ensures those are components
-                    .insert(&mut entity_mut, &*component);
+                    .insert(&mut entity_mut, &*component, &type_registry);
 
                 // debug!("all components {:?}", scene.world.entity(entity).archetype().components());
                 // scene.world.components().
